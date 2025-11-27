@@ -13,7 +13,7 @@ Outputs (to --outdir):
 
 Requires: nflreadpy, pandas, numpy, scikit-learn, matplotlib
 """
-
+import sys
 import argparse
 import os
 from typing import List, Dict
