@@ -326,37 +326,40 @@ def plot_pca(year: int, outdir: str, X_scaled: np.ndarray, teams_df: pd.DataFram
 # ----------------------- Main -----------------------
 
 def main():
-    ap = argparse.ArgumentParser(description="Cluster NFL teams into season-long archetypes.")
-    ap.add_argument("--year", type=int, required=True, help="Season year, e.g., 2025")
-    ap.add_argument("--clusters", type=int, default=5, help="Number of K-Means clusters (default: 5)")
-    ap.add_argument("--outdir", type=str, default=".", help="Output directory (default: current)")
-    args = ap.parse_args()
-
-    print(f"[INFO] Building team-season features for {args.year} …")
-    features = build_team_season_features(args.year)
-
-    print(f"[INFO] Clustering into {args.clusters} archetypes …")
-    res = run_clustering(features, n_clusters=args.clusters, random_state=42)
-    teams = res["teams"]
-    cluster_summary = res["cluster_summary"]
-
-    print(f"[INFO] Saving CSV outputs …")
-    f1, f2, f3 = save_outputs(args.year, args.outdir, features, teams, cluster_summary)
-    print(f"  • Features: {f1}")
-    print(f"  • Teams   : {f2}")
-    print(f"  • Summary : {f3}")
-
-    print(f"[INFO] Rendering PCA plot …")
-    png_path = plot_pca(args.year, args.outdir, res["X_scaled"], teams)
-    print(f"  • Plot    : {png_path}")
-
-    # Console preview
-    preview_cols = ["team", "wins", "epa_diff", "off_epa", "def_epa_allowed", "off_tov_rate", "pass_rate", "wp_std", "archetype", "cluster"]
-    print("\n[PREVIEW] Team Archetypes:")
-    print(teams[preview_cols].sort_values(["cluster", "team"]).to_string(index=False))
-
-    print("\n[PREVIEW] Cluster Centroids (original scale):")
-    print(cluster_summary.to_string(index=False))
+    if "streamlit" in sys.argv[0]:
+        pass
+    else:
+        ap = argparse.ArgumentParser(description="Cluster NFL teams into season-long archetypes.")
+        ap.add_argument("--year", type=int, required=True, help="Season year, e.g., 2025")
+        ap.add_argument("--clusters", type=int, default=5, help="Number of K-Means clusters (default: 5)")
+        ap.add_argument("--outdir", type=str, default=".", help="Output directory (default: current)")
+        args = ap.parse_args()
+        
+        print(f"[INFO] Building team-season features for {args.year} …")
+        features = build_team_season_features(args.year)
+        
+        print(f"[INFO] Clustering into {args.clusters} archetypes …")
+        res = run_clustering(features, n_clusters=args.clusters, random_state=42)
+        teams = res["teams"]
+        cluster_summary = res["cluster_summary"]
+        
+        print(f"[INFO] Saving CSV outputs …")
+        f1, f2, f3 = save_outputs(args.year, args.outdir, features, teams, cluster_summary)
+        print(f"  • Features: {f1}")
+        print(f"  • Teams   : {f2}")
+        print(f"  • Summary : {f3}")
+        
+        print(f"[INFO] Rendering PCA plot …")
+        png_path = plot_pca(args.year, args.outdir, res["X_scaled"], teams)
+        print(f"  • Plot    : {png_path}")
+        
+        # Console preview
+        preview_cols = ["team", "wins", "epa_diff", "off_epa", "def_epa_allowed", "off_tov_rate", "pass_rate", "wp_std", "archetype", "cluster"]
+        print("\n[PREVIEW] Team Archetypes:")
+        print(teams[preview_cols].sort_values(["cluster", "team"]).to_string(index=False))
+        
+        print("\n[PREVIEW] Cluster Centroids (original scale):")
+        print(cluster_summary.to_string(index=False))
 
 
 if __name__ == "__main__":
