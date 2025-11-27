@@ -330,7 +330,7 @@ def main():
         pass
     else:
         ap = argparse.ArgumentParser(description="Cluster NFL teams into season-long archetypes.")
-        ap.add_argument("--year", type=int, required=True, help="Season year, e.g., 2025")
+        ap.add_argument("--year", type=int, required=True, dedfault=2025 help="Season year, e.g., 2025")
         ap.add_argument("--clusters", type=int, default=5, help="Number of K-Means clusters (default: 5)")
         ap.add_argument("--outdir", type=str, default=".", help="Output directory (default: current)")
         args = ap.parse_args()
