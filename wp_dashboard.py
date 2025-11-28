@@ -326,11 +326,9 @@ def plot_pca(year: int, outdir: str, X_scaled: np.ndarray, teams_df: pd.DataFram
 # ----------------------- Main -----------------------
 
 def main():
-    if "streamlit" in sys.argv[0]:
-        pass
-    else:
+
         ap = argparse.ArgumentParser(description="Cluster NFL teams into season-long archetypes.")
-        ap.add_argument("--year", type=int, required=True, default=2025, help="Season year, e.g., 2025")
+        ap.add_argument("--year", type=int, required=False, default=2025, help="Season year, e.g., 2025")
         ap.add_argument("--clusters", type=int, default=5, help="Number of K-Means clusters (default: 5)")
         ap.add_argument("--outdir", type=str, default=".", help="Output directory (default: current)")
         args = ap.parse_args()
